@@ -1,0 +1,4 @@
+# The binary is distributed through GitHub Releases, not the repo -- keeping it
+# tracked would add ~17 MB to every clone and grow with each version.
+XenoSwitch.exe
+XenoSwitch.exe.sha256
