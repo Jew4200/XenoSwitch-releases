@@ -45,28 +45,58 @@ One file. No installer, no Python, no admin rights.
 Windows 10 or 11, 64-bit. Nothing else — no runtime to install, and it does
 **not** need administrator rights.
 
-## Your antivirus may flag it
+## Heads-up: Windows Defender may quarantine this
 
-Windows Defender's machine-learning heuristic flags unsigned one-file
-PyInstaller executables fairly often, usually as `Trojan:Win32/Bearfoos.A!ml`.
-The `!ml` suffix means a heuristic guess, not a signature match for known
-malware. This is a well-known false positive for this kind of build, and it has
-hit this app on the developer's own machine.
+**Please read this before downloading.** Windows Defender currently flags this
+app as `Trojan:Win32/Bearfoos.A!ml`. It is a false positive, but you deserve
+the full story rather than a reassurance.
 
-The releases are Authenticode-signed, but with a self-signed certificate — that
-removes one of the signals the heuristic scores on, and it lets you confirm the
-binary hasn't been tampered with, but it isn't a certificate from a public
-authority and Windows won't treat it as trusted.
+**Why it happens.** The app is Python packaged with PyInstaller. Defender's
+machine-learning heuristic — the `!ml` suffix means a *guess*, not a match
+against known malware — scores the PyInstaller startup stub highly, because
+some real malware is built with the same freely available tool. Thousands of
+legitimate Python apps hit this.
 
-If Defender quarantines it and you want to keep it, add an exclusion for the
-folder you keep it in:
+I verified the cause rather than assuming it: an alternative build whose
+startup stub is only 2.4 MB and contains no bundled archive is flagged
+identically. So the verdict is on the packaging tool, not on anything this app
+does.
 
-```powershell
-Add-MpPreference -ExclusionPath "C:\path\to\your\XenoSwitch\folder"
-```
+**What's being done about it.** The file has been submitted to Microsoft for
+reclassification, which is the fix that works for everybody. Until a definition
+update lands, the detection may come and go.
 
-Run that in an **administrator** PowerShell. Only do this if you trust the
-download — verify the SHA-256 against the one published on the release first.
+**What this app actually does:** reads and switches Windows audio endpoints
+through the same COM interfaces the Sound control panel uses, installs a
+keyboard hook for the hotkeys you configure, and writes one JSON settings file.
+It makes **no network connections at all** and needs no administrator rights.
+The complete source is linked below — read it.
+
+### How to decide for yourself
+
+Don't take my word for it:
+
+1. **Check it on [VirusTotal](https://www.virustotal.com/).** Upload the exe, or
+   search its SHA-256 (published on each release) to see what ~70 engines say.
+   A handful of heuristic detections on a PyInstaller build is typical and
+   expected; a broad consensus across major engines would not be, and would be
+   a good reason not to run it.
+2. **Verify the download is the file I published**, so you know it wasn't
+   tampered with in transit:
+   ```powershell
+   Get-FileHash .\XenoSwitch.exe -Algorithm SHA256
+   ```
+   Compare the result against the hash on the release page.
+3. **Read the source.** It's all public.
+
+If after that you're not comfortable, **don't run it** — that's a completely
+reasonable call, and I'd rather you skipped it than ran something you don't
+trust.
+
+If Defender quarantines it and you do want to keep it, Windows' own
+Virus & threat protection UI has a "Restore" / "Allow on device" button for
+exactly this. You should never have to disable your antivirus or paste
+commands you don't understand to run a utility like this one.
 
 ## How it works
 
