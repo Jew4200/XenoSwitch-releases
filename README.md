@@ -102,10 +102,13 @@ protection → Protection history, find the XenoSwitch detection, and choose
 *Restore* / *Allow on device*. This is the most conservative option and
 requires no scripts at all.
 
-**2. Run the included `Allow-XenoSwitch.ps1` helper** (attached to each
-release). Put it in the same folder as `XenoSwitch.exe` and run it. It adds a
-Windows Defender exclusion for **only that one folder**, so Defender stops
-deleting the app. Before changing anything it:
+**2. Run the included helper** (attached to each release as
+`Allow-XenoSwitch.bat` + `Allow-XenoSwitch.ps1`). Put both, next to
+`XenoSwitch.exe`, in the same folder, then **double-click `Allow-XenoSwitch.bat`**.
+(The `.bat` just launches the `.ps1` the correct way — a `.ps1` opens in Notepad
+if you double-click it directly.) It adds a Windows Defender exclusion for
+**only that one folder**, so Defender stops deleting the app. Before changing
+anything it:
 
 - shows you the exact command it will run,
 - prints the SHA-256 of the exe so you can verify your download first,
