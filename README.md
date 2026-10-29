@@ -93,10 +93,44 @@ If after that you're not comfortable, **don't run it** — that's a completely
 reasonable call, and I'd rather you skipped it than ran something you don't
 trust.
 
-If Defender quarantines it and you do want to keep it, Windows' own
-Virus & threat protection UI has a "Restore" / "Allow on device" button for
-exactly this. You should never have to disable your antivirus or paste
-commands you don't understand to run a utility like this one.
+### If Defender keeps deleting it and you've decided you trust it
+
+You have three options, in order of how little they touch your system:
+
+**1. Use Windows' own Restore button.** Open Windows Security → Virus & threat
+protection → Protection history, find the XenoSwitch detection, and choose
+*Restore* / *Allow on device*. This is the most conservative option and
+requires no scripts at all.
+
+**2. Run the included `Allow-XenoSwitch.ps1` helper** (attached to each
+release). Put it in the same folder as `XenoSwitch.exe` and run it. It adds a
+Windows Defender exclusion for **only that one folder**, so Defender stops
+deleting the app. Before changing anything it:
+
+- shows you the exact command it will run,
+- prints the SHA-256 of the exe so you can verify your download first,
+- asks you to type `yes`,
+- prompts for administrator rights via the normal Windows UAC dialog.
+
+It does **not** disable your antivirus, does **not** turn off real-time
+protection, and excludes nothing except the folder it lives in. It does not
+delete itself or hide what it did — it stays next to the exe with the undo
+command inside it. Keep that folder for XenoSwitch only, since files you put
+there won't be scanned.
+
+**To undo the exclusion at any time**, run this in an **administrator**
+PowerShell (replace the path with your folder):
+
+```powershell
+Remove-MpPreference -ExclusionPath "C:\path\to\your\XenoSwitch\folder"
+```
+
+**3. Don't bother.** If you're not comfortable with any of the above, that's a
+completely reasonable call — skip the app. You should never feel pressured to
+weaken your security to run a utility like this.
+
+Whichever you choose: an exclusion means files in that folder are no longer
+scanned, so only keep software there that you actually trust.
 
 ## How it works
 
